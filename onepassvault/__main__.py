@@ -2,21 +2,26 @@ import sys
 
 import click
 
-import onepassvault.userio
 from onepassvault.credentials import start
-from onepassvault.userio import echo
+from onepassvault.userio import echo, interactive, verbosity
+from onepassvault.vault import assert_vault_is_live
 
 
 @click.command()
 @click.option("-v", "--verbose", count=True)
-def cli(verbose):
-    onepassvault.userio.VERBOSITY = verbose
+@click.option("--noninteractive", is_flag=True)
+def cli(verbose, noninteractive):
+    verbosity(verbose)
+    if noninteractive:
+        interactive(False)
+
+    echo(f"Running in {'' if interactive() else 'non-'}interactive mode", 2)
     try:
         op, vault = start()
-        echo(op)
-        echo(vault)
+        assert op.account is not None
+        assert_vault_is_live(vault)
     except Exception as e:
-        echo(str(e), color="red", bold=True)
+        echo(e, color="red", bold=True)
         sys.exit(1)
 
 

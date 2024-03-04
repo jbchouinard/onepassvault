@@ -1,4 +1,4 @@
-from onepassvault.opw import OnePassword, OpItem, OpItemFieldType, OpVault
+from onepassvault.opw import OnePassword, OpItem, OpItemFieldType
 
 
 def test_item_crud(op: OnePassword, test_vault):

@@ -5,7 +5,7 @@ description = "A CLI tool for syncing secrets between 1Password and HCP Vault."
 authors = ["Jerome Boisvert-Chouinard <me@jbchouinard.net>"]
 
 [tool.poetry.scripts]
-opv = "onepassvault.__main__:cli"
+opvault = "onepassvault.__main__:cli"
 
 [tool.poetry.dependencies]
 python = "^3.10"
