@@ -1,5 +1,5 @@
-from .client import OnePassword, OpProcessError, OpNotSignedIn, OpItemNotFound, OpVaultNotFound
-from .schema import OpItem, OpItemFieldType, OpItemField, OpVault, OpDocument
+from .client import OnePassword, OpItemNotFound, OpNotSignedIn, OpProcessError, OpVaultNotFound
+from .schema import OpDocument, OpItem, OpItemField, OpItemFieldType, OpVault
 
 __all__ = [
     "OnePassword",

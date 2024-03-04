@@ -1,10 +1,10 @@
-from subprocess import Popen, PIPE
-import shutil
-import os
-import json
-import re
-from typing import Optional, Set, List, Tuple, Union
 import copy
+import json
+import os
+import re
+import shutil
+from subprocess import PIPE, Popen
+from typing import List, Optional, Set, Tuple, Union
 
 from .schema import OpDocument, OpItem, OpVault
 
@@ -42,8 +42,8 @@ class OpItemNotFound(OpProcessError):
 
 ERROR_MATCH = {
     "not signed in": OpNotSignedIn,
-    "isn't a vault in this account": OpVaultNotFound,
-    "isn't an item in any vault": OpItemNotFound,
+    "isn't a vault": OpVaultNotFound,
+    "isn't an item": OpItemNotFound,
 }
 
 

@@ -1,7 +1,9 @@
-import pytest
 import os
-from onepassvault.opw.client import OnePassword
 from uuid import uuid4
+
+import pytest
+
+from onepassvault.opw.client import OnePassword
 
 
 @pytest.fixture(scope="session")

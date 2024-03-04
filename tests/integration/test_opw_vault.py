@@ -1,6 +1,8 @@
 import pytest
-from .conftest import random_vault_id
+
 from onepassvault.opw import OpVaultNotFound
+
+from .conftest import random_vault_id
 
 
 def test_vault_create_delete(op):

@@ -1,24 +1,22 @@
-import click
 import sys
 
-from onepassvault.opw import OnePassword
+import click
+
+import onepassvault.userio
+from onepassvault.credentials import start
+from onepassvault.userio import echo
 
 
 @click.command()
-def cli():
+@click.option("-v", "--verbose", count=True)
+def cli(verbose):
+    onepassvault.userio.VERBOSITY = verbose
     try:
-        op = OnePassword("my.1password.com")
-        op.delete_item(op.get_item("My First Test Item"))
-        # vault = op.get_or_create_vault("TestVault-123")
-        # op.set_default_vault(vault)
-        # new_item = op.create_item_from_template("My First Test Item", "Secure Note")
-        # print(new_item.to_json())
-        # new_item.add_field("password", OpItemFieldType.PASSWORD, "my-secret-password")
-        # item = op.create_item(new_item)
-        # print(item.to_json())
-
+        op, vault = start()
+        echo(op)
+        echo(vault)
     except Exception as e:
-        click.echo(click.style(str(e), fg="red", bold=True))
+        echo(str(e), color="red", bold=True)
         sys.exit(1)
 
 

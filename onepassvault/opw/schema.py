@@ -1,8 +1,9 @@
-from enum import Enum
-from pydantic import BaseModel
-from typing import Any, Optional
-import json
 import copy
+import json
+from enum import Enum
+from typing import Any, Optional
+
+from pydantic import BaseModel
 
 
 class OpVault(BaseModel):
@@ -52,7 +53,9 @@ class OpItemField(BaseModel):
 class OpItem:
     def __init__(self, data: dict):
         self._data = data
-        self.fields = {f["id"]: OpItemField.model_validate(f) for f in data.pop("fields", [])}
+        fields = data.pop("fields", [])
+        self.fields_by_id = {f["id"]: OpItemField.model_validate(f) for f in fields}
+        self.fields_by_label = {f["label"]: OpItemField.model_validate(f) for f in fields}
 
     @property
     def id(self) -> Optional[str]:
@@ -80,30 +83,51 @@ class OpItem:
         value: Optional[Any] = None,
         purpose: Optional[Any] = None,
     ) -> OpItemField:
-        if name in self.fields:
+        if name in self.fields_by_id:
             raise ValueError(f"Field {name} already exists on Item {self.id}")
         field = OpItemField.new(name=name, type=type, value=value, purpose=purpose)
         self.set_field(field)
         return field
 
-    def get_field(self, id: str) -> OpItemField:
-        return self.fields[id]
+    def get_field(self, key: str, by_label=True) -> OpItemField:
+        fieldmap = self.fields_by_label if by_label else self.fields_by_id
+        return fieldmap.get(key)
+
+    def get_field_value(self, key: str, by_label=True) -> Optional[Any]:
+        field = self.get_field(key, by_label)
+        if field is None:
+            return None
+        return field.value
 
     def set_field(self, field: OpItemField):
-        self.fields[field.id] = field
+        self.fields_by_id[field.id] = field
+        self.fields_by_label[field.label] = field
 
-    def remove_field(self, id: str) -> OpItemField:
-        self.fields.pop(id)
+    def set_field_value(self, key: str, value: Any, by_label=True):
+        fieldmap = self.fields_by_label if by_label else self.fields_by_id
+        fieldmap[key].value = value
+
+    def remove_field(self, key: str, by_label=True) -> OpItemField:
+        if by_label:
+            field = self.fields_by_label.pop(key)
+            self.fields_by_id.pop(field.id)
+        else:
+            field = self.fields_by_id.pop(key)
+            self.fields_by_label.pop(field.label)
+        return field
+
+    def has_field(self, key: str, by_label=True) -> bool:
+        fieldmap = self.fields_by_label if by_label else self.fields_by_id
+        return key in fieldmap
 
     def to_json(self) -> bytes:
         data = copy.deepcopy(self._data)
-        data["fields"] = [f.model_dump() for f in self.fields.values()]
+        data["fields"] = [f.model_dump() for f in self.fields_by_id.values()]
         return json.dumps(data).encode("utf-8")
 
 
 class OpDocument(OpItem):
     def __init__(self, data: dict, contents: bytes):
-        print(data)
         super().__init__(data)
         if self.category != "DOCUMENT":
             raise TypeError(f"This item is of type {self.type}, not DOCUMENT")

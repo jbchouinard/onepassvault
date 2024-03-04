@@ -1,7 +1,7 @@
-from onepassvault.opw import OnePassword, OpVault, OpItem, OpItemFieldType
+from onepassvault.opw import OnePassword, OpItem, OpItemFieldType, OpVault
 
 
-def test_item_crud(op: OnePassword, test_vault: OpVault):
+def test_item_crud(op: OnePassword, test_vault):
     new_item: OpItem = op.create_item_from_template("test-item", "Secure Note", vault=test_vault)
     assert new_item.vault.id == test_vault.id
     new_item.add_field("secret", OpItemFieldType.PASSWORD, "my-secret-password")
