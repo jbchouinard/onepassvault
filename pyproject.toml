@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "onepassvault"
+version = "0.1.0"
+description = "A CLI tool for syncing secrets between 1Password and HCP Vault."
+authors = ["Jerome Boisvert-Chouinard <me@jbchouinard.net>"]
+
+[tool.poetry.scripts]
+opv = "onepassvault.__main__:cli"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+hvac = "^2.1.0"
+click = "^8.1.7"
+pydantic = "^2.6.3"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.3.0"
+pytest = "^8.1.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.format]
+line-ending = "lf"
