@@ -2,6 +2,10 @@
 
 A tool for synchronizing secrets between 1Password and HashiCorp Vault KV store.
 
+## Features
+- Store and retrieve Vault credentials from 1Password
+- Push or pull secrets between 1Password and Vault KV store
+
 ## Requirements
 
 - 1Password CLI: op version 2.25.0+
@@ -10,9 +14,9 @@ Sign-in with 1Password CLI Desktop app integration: https://developer.1password.
 
 ## Security
 
-This was developed for my personal use for homelab projects. I've attempted to make the tool 
-fairly secure, e.g. secrets are never saved to disk or environment variables, but I make
-no guarantees.
+This tool was developed for my personal use and experimentation. I've tried to make the tool 
+as secure as possible, e.g. secrets are never saved to disk or environment variables, but it is
+not battle-tested.
 
 ## Installation
 
@@ -22,6 +26,12 @@ pipx install git+https://github.com/jbchouinard/onepassvault.git
 ```
 
 ## Configuration
+
+### opvault
+
+### 1Password
+
+### Vault
 
 ## Usage
 
