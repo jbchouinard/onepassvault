@@ -5,8 +5,8 @@ from typing import Any, Optional
 import hvac
 from pydantic import BaseModel
 
+from clickio.input import prompt
 from onepassvault.func import opt_int, opt_path, opt_str
-from onepassvault.userio import input_str
 
 
 class VaultError(RuntimeError):
@@ -52,7 +52,7 @@ class VaultClientConfig(BaseModel):
 
     def _from_input(self, attr: str, current):
         default = opt_str(current) or ""
-        return self.cast_field(attr, input_str(f"{VAULT_ENV_VARS[attr]}", default) or None)
+        return self.cast_field(attr, prompt(f"{VAULT_ENV_VARS[attr]}", default) or None)
 
     def _load(self, method, overwrite=False):
         for attr in VAULT_CONFIG_FIELDS:

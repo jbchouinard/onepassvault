@@ -3,9 +3,10 @@ from typing import Tuple
 
 import hvac
 
+from clickio.input import prompt, prompt_yn
+from clickio.output import echo_info, echo_info_v
 from onepassvault.opw import OnePassword, OpItem, OpItemFieldType
 from onepassvault.opw.client import OpItemNotFound
-from onepassvault.userio import echo, input_bool, input_str
 from onepassvault.vault import (
     VAULT_CONFIG_FIELDS,
     VaultClientConfig,
@@ -39,22 +40,22 @@ def get_vault_config(op: OnePassword) -> VaultClientConfig:
     if VAULT_CONFIG_OP_ITEM_ID:
         op_item_id = VAULT_CONFIG_OP_ITEM_ID
     else:
-        op_item_id = input_str("Use 1Password item for Vault credentials storage", "skip")
-        echo()
-        echo(f"To skip this prompt next time:  export VAULT_CONFIG_OP_ITEM_ID='{op_item_id}'", indent=2)
-        echo()
+        op_item_id = prompt("Use 1Password item for Vault credentials storage", "skip")
+        echo_info(
+            f"\n   To skip this prompt next time:  export VAULT_CONFIG_OP_ITEM_ID='{op_item_id}'\n",
+        )
 
     if op_item_id and op_item_id != "skip":
         try:
             item = op.get_item(op_item_id)
             return op_item_to_vault_config(item)
         except OpItemNotFound:
-            echo(f"The item {op_item_id} does not appear to exist in this account")
+            echo_info(f"The item {op_item_id} does not appear to exist in this account")
 
-    echo("Enter your Vault credentials:")
+    echo_info("Enter your Vault credentials:")
     vault_config = load_config()
     if op_item_id and op_item_id != "skip":
-        save = input_bool(
+        save = prompt_yn(
             f"Save this Vault configuration to the 1Password item {op_item_id}?", False
         )
         if save:
@@ -67,8 +68,8 @@ def get_vault_config(op: OnePassword) -> VaultClientConfig:
 def start() -> Tuple[OnePassword, hvac.Client]:
     op = OnePassword()
     op.signin()
-    echo(f"Signed in to 1Password account {op.account['email']}", 1)
+    echo_info_v(f"Signed in to 1Password account {op.account['email']}")
     vault_config = get_vault_config(op)
     vault_client = open_vault(vault_config)
-    echo(f"Using Vault at {vault_config.url}", 1)
+    echo_info_v(f"Using Vault at {vault_config.url}")
     return op, vault_client

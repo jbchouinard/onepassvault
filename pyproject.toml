@@ -3,6 +3,10 @@ name = "onepassvault"
 version = "0.1.0"
 description = "A CLI tool for syncing secrets between 1Password and HCP Vault."
 authors = ["Jerome Boisvert-Chouinard <me@jbchouinard.net>"]
+packages = [
+    { include = "onepassvault" },
+    { include = "clickio" },
+]
 
 [tool.poetry.scripts]
 opvault = "onepassvault.__main__:cli"
@@ -12,6 +16,9 @@ python = "^3.10"
 hvac = "^2.1.0"
 click = "^8.1.7"
 pydantic = "^2.6.3"
+lxml = "^5.1.0"
+colorama = "^0.4.6"
+rich = "^13.7.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.0"
